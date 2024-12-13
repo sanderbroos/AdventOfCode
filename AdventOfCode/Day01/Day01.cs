@@ -1,6 +1,6 @@
 namespace AOC2024;
 
-public class Day1 {
+public class Day01 {
     public static int Part1() {
         var input = File.ReadAllLines("..\\..\\..\\..\\AdventOfCode\\Day1\\input.txt")
             .Select(line => line.Split("   "));

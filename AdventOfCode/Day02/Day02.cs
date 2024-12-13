@@ -1,6 +1,6 @@
 namespace AOC2024;
 
-public class Day2 {
+public class Day02 {
     public static int Part1() {
         var input = GetInput();
 
