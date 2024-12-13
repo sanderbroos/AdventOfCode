@@ -1,4 +1,4 @@
-namespace Day2;
+namespace AOC2024;
 
 public class Day2 {
     public static int Part1() {
