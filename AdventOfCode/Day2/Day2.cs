@@ -14,7 +14,7 @@ public class Day2 {
     }
 
     private static List<List<int>> GetInput() {
-        return File.ReadAllLines("C:\\Users\\sande\\Documents\\AdventOfCode\\AdventOfCode\\Day2\\input.txt")
+        return File.ReadAllLines("..\\..\\..\\..\\AdventOfCode\\Day2\\input.txt")
             .Select(line => line.Split(" ").Select(item => int.Parse(item)).ToList())
             .ToList();
     }

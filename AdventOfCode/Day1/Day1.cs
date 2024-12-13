@@ -2,7 +2,7 @@ namespace AOC2024;
 
 public class Day1 {
     public static int Part1() {
-        var input = File.ReadAllLines("C:\\Users\\sande\\Documents\\AdventOfCode\\AdventOfCode\\Day1\\input.txt")
+        var input = File.ReadAllLines("..\\..\\..\\..\\AdventOfCode\\Day1\\input.txt")
             .Select(line => line.Split("   "));
 
         var sortedNumbersTeam1 = input.Select(line => int.Parse(line[0])).OrderBy(num => num);
@@ -15,7 +15,7 @@ public class Day1 {
     }
 
     public static int Part2() {
-        var input = File.ReadAllLines("C:\\Users\\sande\\Documents\\AdventOfCode\\AdventOfCode\\Day1\\input.txt")
+        var input = File.ReadAllLines("..\\..\\..\\..\\AdventOfCode\\Day1\\input.txt")
             .Select(line => line.Split("   "));
 
         var sortedNumbersTeam1 = input.Select(line => int.Parse(line[0]));
