@@ -7,24 +7,40 @@ public class Day13 {
         return clawMachines.Sum(cm => Check(cm));
     }
 
-    public static int Part2() {
-        return 0;
+    public static double Part2() {
+        var clawMachines = GetInput()
+            .Select(cm => new ClawMachine {
+                ButtonA_X = cm.ButtonA_X,
+                ButtonA_Y = cm.ButtonA_Y,
+                ButtonB_X = cm.ButtonB_X,
+                ButtonB_Y = cm.ButtonB_Y,
+                PrizeX = cm.PrizeX + 10000000000000,
+                PrizeY = cm.PrizeY + 10000000000000,
+            });
+
+        return clawMachines.Sum(cm => Check(cm));
     }
 
     public class ClawMachine {
-        public float ButtonA_X;
-        public float ButtonA_Y;
-        public float ButtonB_X;
-        public float ButtonB_Y;
-        public float PrizeX;
-        public float PrizeY;
+        public long ButtonA_X;
+        public long ButtonA_Y;
+        public long ButtonB_X;
+        public long ButtonB_Y;
+        public long PrizeX;
+        public long PrizeY;
     }
 
     private static double Check(ClawMachine cm) {
-        var buttonAPresses = Math.Round((cm.PrizeY * cm.ButtonB_X - cm.PrizeX * cm.ButtonB_Y) / (cm.ButtonB_X * cm.ButtonA_Y - cm.ButtonA_X * cm.ButtonB_Y), 3);
-        var buttonBPresses = Math.Round((cm.PrizeY * cm.ButtonA_X - cm.PrizeX * cm.ButtonA_Y) / (cm.ButtonA_X * cm.ButtonB_Y - cm.ButtonB_X * cm.ButtonA_Y), 3);
+        double buttonANumerator = cm.PrizeY * cm.ButtonB_X - cm.PrizeX * cm.ButtonB_Y;
+        double buttonADenominator = cm.ButtonB_X * cm.ButtonA_Y - cm.ButtonA_X * cm.ButtonB_Y;
 
-        if (buttonAPresses >= 0 && buttonBPresses >= 0 && buttonAPresses == Math.Round(buttonAPresses) && buttonBPresses == Math.Round(buttonBPresses)) {
+        double buttonBNumerator = cm.PrizeY * cm.ButtonA_X - cm.PrizeX * cm.ButtonA_Y;
+        double buttonBDenominator = cm.ButtonA_X * cm.ButtonB_Y - cm.ButtonB_X * cm.ButtonA_Y;
+
+        double buttonAPresses = (double) buttonANumerator/buttonADenominator;
+        double buttonBPresses = (double) buttonBNumerator/buttonBDenominator;
+
+        if (buttonAPresses >= 0 && buttonBPresses >= 0 && buttonANumerator % buttonADenominator == 0 && buttonBNumerator % buttonBDenominator == 0) {
             return 3 * Math.Round(buttonAPresses) + 1 * Math.Round(buttonBPresses);
         }
 
@@ -37,7 +53,7 @@ public class Day13 {
             .Skip(1)
             .Select(rec => rec.Replace("\n", "")
                 .Split([", Y+", "Button B: X+", "Prize: X=", ", Y="], StringSplitOptions.None)
-                .Select(num => (float)int.Parse(num))
+                .Select(num => (long)int.Parse(num))
                 .ToList())
             .Select(rec => new ClawMachine {
                 ButtonA_X = rec[0],
