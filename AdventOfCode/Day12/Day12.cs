@@ -1,19 +1,23 @@
 namespace AOC2024;
 
-public class Day12 {
-    public static int Part1() {
-        List<List<char?>> plants = GetInput();
+public class Day12
+{
+    private List<List<Plant>> plants = [];
+
+    public int Part1()
+    {
+        LoadPlants();
 
         int totalPrice = 0;
-        List<(int, int)> checkedCoords = [];
 
-        for (int i = 0; i < plants.Count; i++) {
-            for (int j = 0; j < plants[0].Count; j++) {
-                (int area, int perimeter) = CheckRegionFromCoords(plants, i, j, checkedCoords);
-                totalPrice += area * perimeter;
-
-                foreach (var coord in checkedCoords) {
-                    plants[coord.Item1][coord.Item2] = null;
+        for (int y = 0; y < plants.Count; y++)
+        {
+            for (int x = 0; x < plants[0].Count; x++)
+            {
+                if (!plants[y][x].IsChecked)
+                {
+                    (int area, List<PlantSide> plantSides) = CheckRegionFromCoords(y, x, []);
+                    totalPrice += area * plantSides.Count;
                 }
             }
         }
@@ -21,44 +25,122 @@ public class Day12 {
         return totalPrice;
     }
 
-    public static void Part2() {
-        
-    }
+    public int Part2()
+    {
+        LoadPlants();
 
-    public static (int area, int perimeter) CheckRegionFromCoords(List<List<char?>> plants, int i, int j, List<(int, int)> checkedCoords) {
-        checkedCoords.Add((i, j));
+        int totalPrice = 0;
 
-        char? plantType = plants[i][j];
-        if (!plantType.HasValue) {
-            return (0, 0);
-        }
-
-        int area = 1;
-        int perimeter = 0;
-
-        (int, int)[] fourSides = [(i-1,j), (i+1,j), (i, j-1), (i, j+1)];
-
-        foreach ((int i2, int j2) in fourSides) {
-            if (i2 >= 0 && i2 < plants.Count && j2 >= 0 && j2 < plants[0].Count && plants[i2][j2] == plantType) {
-                if (!checkedCoords.Any(c => c.Item1 == i2 && c.Item2 == j2)) {
-                    (int, int) result = CheckRegionFromCoords(plants, i2, j2, checkedCoords);
-                    area += result.Item1;
-                    perimeter += result.Item2;
+        for (int y = 0; y < plants.Count; y++)
+        {
+            for (int x = 0; x < plants[0].Count; x++)
+            {
+                if (!plants[y][x].IsChecked)
+                {
+                    (int area, List<PlantSide> plantSides) = CheckRegionFromCoords(y, x, []);
+                    totalPrice += area * CountRegionSides(plantSides);
                 }
             }
-            else {
-                perimeter += 1;
+        }
+
+        return totalPrice;
+    }
+
+    private (int area, List<PlantSide> perimeter) CheckRegionFromCoords(int y, int x, List<PlantSide> plantSides)
+    {
+        Plant plant = plants[y][x];
+        if (plant.IsChecked)
+        {
+            return (0, plantSides);
+        }
+        plant.IsChecked = true;
+
+        int area = 1;
+
+        Dictionary<Direction, (int, int)> fourSides = new()
+        {
+            { Direction.Up, (y-1,x) },
+            { Direction.Down, (y+1,x) },
+            { Direction.Left, (y, x-1) },
+            { Direction.Right, (y, x+1) }
+        };
+
+        foreach (KeyValuePair<Direction, (int y2, int x2)> item in fourSides)
+        {
+            bool outOfBounds = item.Value.y2 < 0 || item.Value.y2 >= plants.Count || item.Value.x2 < 0 || item.Value.x2 >= plants[0].Count;
+
+            if (!outOfBounds && plants[item.Value.y2][item.Value.x2].Type == plant.Type)
+            {
+                (int, List<PlantSide>) result = CheckRegionFromCoords(item.Value.y2, item.Value.x2, plantSides);
+                area += result.Item1;
+            }
+            else
+            {
+                plantSides.Add(new PlantSide
+                {
+                    x = x,
+                    y = y,
+                    direction = item.Key
+                });
             }
         }
 
-        return (area, perimeter);
+        return (area, plantSides);
     }
 
-    private static List<List<char?>> GetInput() {
-        List<List<char?>> input = File.ReadAllLines("..\\..\\..\\..\\AdventOfCode\\Day12\\input.txt")
-            .Select(line => line.Select(c => (char?) c).ToList())
+    private int CountRegionSides(List<PlantSide> plantSides)
+    {
+        int regionSidesCount = 0;
+
+        while (plantSides.Count > 0)
+        {
+            regionSidesCount++;
+            RemoveConnectedPlantSides(plantSides, plantSides[0]);
+        }
+
+        return regionSidesCount;
+    }
+
+    private void RemoveConnectedPlantSides(List<PlantSide> plantSides, PlantSide plantSide)
+    {
+        plantSides.Remove(plantSide);
+
+        var adjacentPlantSides = plantSides.Where(ps => ps.direction == plantSide.direction
+            && (Math.Abs(ps.x - plantSide.x) == 1 && ps.y == plantSide.y
+                || Math.Abs(ps.y - plantSide.y) == 1 && ps.x == plantSide.x))
             .ToList();
 
-        return input;
+        foreach (PlantSide adjacentPlantSide in adjacentPlantSides)
+        {
+            RemoveConnectedPlantSides(plantSides, adjacentPlantSide);
+        }
+    }
+
+    private void LoadPlants()
+    {
+        plants = File.ReadAllLines("..\\..\\..\\..\\AdventOfCode\\Day12\\input.txt")
+            .Select(line => line.Select(c => new Plant { Type = c, IsChecked = false }).ToList())
+            .ToList();
+    }
+
+    internal class Plant
+    {
+        internal char Type;
+        internal bool IsChecked;
+    }
+
+    internal class PlantSide
+    {
+        internal int x;
+        internal int y;
+        internal Direction direction;
+    }
+
+    internal enum Direction
+    {
+        Left,
+        Up,
+        Right,
+        Down
     }
 }
