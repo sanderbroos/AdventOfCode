@@ -16,6 +16,26 @@ public class Day10
             {
                 if (topographicMap[y][x] == 0)
                 {
+                    scoreSum += ReachablePeaks(topographicMap, x, y).Distinct().Count();
+                }
+            }
+        }
+
+        return scoreSum;
+    }
+
+    public int Part2()
+    {
+        List<List<int>> topographicMap = GetInput();
+
+        int scoreSum = 0;
+
+        for (int y = 0; y < topographicMap.Count; y++)
+        {
+            for (int x = 0; x < topographicMap.First().Count; x++)
+            {
+                if (topographicMap[y][x] == 0)
+                {
                     scoreSum += ReachablePeaks(topographicMap, x, y).Count;
                 }
             }
@@ -24,15 +44,10 @@ public class Day10
         return scoreSum;
     }
 
-    public void Part2()
-    {
-
-    }
-
-    private HashSet<(int x, int y)> ReachablePeaks(List<List<int>> topographicMap, int x, int y)
+    private List<(int x, int y)> ReachablePeaks(List<List<int>> topographicMap, int x, int y)
     {
         int currentHeight = topographicMap[y][x];
-        HashSet<(int x, int y)> reachablePeaks = [];
+        List<(int x, int y)> reachablePeaks = [];
 
         foreach ((int xOffset, int yOffset) direction in Directions)
         {
@@ -49,7 +64,7 @@ public class Day10
                 }
                 else
                 {
-                    reachablePeaks.UnionWith(ReachablePeaks(topographicMap, adjacentX, adjacentY));
+                    reachablePeaks.AddRange(ReachablePeaks(topographicMap, adjacentX, adjacentY));
                 }
             }
         }
