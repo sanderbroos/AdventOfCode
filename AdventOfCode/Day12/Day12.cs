@@ -14,11 +14,8 @@ public class Day12
         {
             for (int x = 0; x < plants[0].Count; x++)
             {
-                if (!plants[y][x].IsChecked)
-                {
-                    (int area, List<PlantSide> plantSides) = CheckRegionFromCoords(y, x, []);
-                    totalPrice += area * plantSides.Count;
-                }
+                (int area, List<PlantSide> plantSides) = CheckRegionFromCoords(y, x, []);
+                totalPrice += area * plantSides.Count;
             }
         }
 
@@ -35,11 +32,8 @@ public class Day12
         {
             for (int x = 0; x < plants[0].Count; x++)
             {
-                if (!plants[y][x].IsChecked)
-                {
-                    (int area, List<PlantSide> plantSides) = CheckRegionFromCoords(y, x, []);
-                    totalPrice += area * CountRegionSides(plantSides);
-                }
+                (int area, List<PlantSide> plantSides) = CheckRegionFromCoords(y, x, []);
+                totalPrice += area * CountRegionSides(plantSides);
             }
         }
 
@@ -71,8 +65,7 @@ public class Day12
 
             if (!outOfBounds && plants[item.Value.y2][item.Value.x2].Type == plant.Type)
             {
-                (int, List<PlantSide>) result = CheckRegionFromCoords(item.Value.y2, item.Value.x2, plantSides);
-                area += result.Item1;
+                area += CheckRegionFromCoords(item.Value.y2, item.Value.x2, plantSides).area;
             }
             else
             {
