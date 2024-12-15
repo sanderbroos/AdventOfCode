@@ -4,6 +4,8 @@
 // Console.WriteLine("Day02-1 " + AOC2024.Day02.Part1());
 // Console.WriteLine("Day02-2 " + AOC2024.Day02.Part2());
 
+Console.WriteLine("Day10-1 " + new AOC2024.Day10().Part1());
+
 Console.WriteLine("Day11-1 " + new AOC2024.Day11().Part1());
 Console.WriteLine("Day11-2 " + new AOC2024.Day11().Part2());
 
