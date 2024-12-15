@@ -1,8 +1,8 @@
 namespace AOC2024;
 
-public class Day15
+public class Day15Part1
 {
-    public int Part1()
+    public int GetSolution()
     {
         var map = GetInputMap();
         var moves = GetInputMoves();
@@ -14,11 +14,6 @@ public class Day15
         }
 
         return SumOfBoxGPS(map);
-    }
-
-    public void Part2()
-    {
-
     }
 
     private (int, int) CoordinatesOf(List<List<char?>> map, char? item)
