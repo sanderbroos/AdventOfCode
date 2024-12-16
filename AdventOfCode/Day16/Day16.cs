@@ -10,17 +10,67 @@ public class Day16
     ];
 
     int currentLowestScore = int.MaxValue;
+    List<List<char>> maze;
+    Coord mazeEnd;
+    int sizeX;
+    int sizeY;
 
     public int? Part1()
     {
-        List<List<char>> maze = GetInput();
-        Coord reindeerStart = coordOf(maze, 'S');
+        maze = GetInput();
+        mazeEnd = coordOf('E');
+        sizeX = maze.First().Count;
+        sizeY = maze.Count;
+        Coord reindeerStart = coordOf('S');
 
-        Path? shortestPathToEnd = getShortestPathToEnd(maze, new Path {
-            coords = [ reindeerStart ],
-            score = 0 });
+        List<Path> pathsToTry = [new Path {
+            newCoord = reindeerStart,
+            score = 0,
+            currentDirection = Directions.First() }];
 
-        return shortestPathToEnd?.score;
+        List<Path> pathsToEnd = [];
+        int i = 0;
+
+        while (pathsToTry.Count > 0) {
+            Path pathToTry = pathsToTry.First();
+
+            i++;
+            if (i % 1000 == 0) {
+                Console.WriteLine(i.ToString() + " " + pathsToTry.Count.ToString());
+            } 
+
+            if (pathToTry.score >= currentLowestScore) {
+                pathsToTry.Remove(pathToTry);
+                continue;
+            }
+
+            List<Path> newPaths = getBranchingPaths(maze, pathToTry);
+
+            pathsToTry.Remove(pathToTry);
+
+            foreach (Path newPath in newPaths) {
+                if (newPath.newCoord.Equals(mazeEnd)) {
+                    pathsToEnd.Add(newPath);
+                    if (newPath.score < currentLowestScore) {
+                        currentLowestScore = newPath.score;
+                    }
+                }
+
+                bool added = false;
+                for (int index = 0; index < pathsToTry.Count; index++) {
+                    if (pathsToTry[index].score >= newPath.score) {
+                        pathsToTry.Insert(index, newPath);
+                        added = true;
+                        break;
+                    }
+                }
+                if (!added) {
+                    pathsToTry.Add(newPath);
+                }
+            }
+        }
+
+        return pathsToEnd.OrderBy(path => path.score).First().score;
     }
 
     public void Part2()
@@ -28,56 +78,52 @@ public class Day16
         
     }
 
-    Path? getShortestPathToEnd(List<List<char>> maze, Path pathSoFar) {
-        Coord lastCoord = pathSoFar.coords.Last();
-        Direction currentDirection = pathSoFar.coords.Count > 1 ? Directions.Single(d => 
-            d.x == lastCoord.x - pathSoFar.coords[^2].x &&
-            d.y == lastCoord.y - pathSoFar.coords[^2].y)
-            : Directions.First();
-
-        if (maze[lastCoord.y][lastCoord.x] == 'E') {
-            return pathSoFar;
-        }
+    List<Path> getBranchingPaths(List<List<char>> maze, Path pathSoFar) {
+        Coord lastCoord = pathSoFar.newCoord;
 
         List<Path> possiblePaths = [];
 
-        foreach (Direction direction in Directions) {
-            Coord newCoord = new() { x = lastCoord.x + direction.x, y = lastCoord.y + direction.y};
-            bool turn = direction != currentDirection;
+        foreach (Direction newDirection in Directions) {
+            Coord newCoord = new() { x = lastCoord.x + newDirection.x, y = lastCoord.y + newDirection.y};
+            bool turn = newDirection != pathSoFar.currentDirection;
             int newScore = pathSoFar.score + 1 + (turn ? 1000 : 0);
 
             if (newScore >= currentLowestScore
-                || isOutOfBounds(newCoord, maze[0].Count, maze.Count)
+                || isOutOfBounds(newCoord)
                 || maze[newCoord.y][newCoord.x] == '#'
-                || pathSoFar.coords.Any(c => c.x == newCoord.x && c.y == newCoord.y)) {
+                || pathSoFar.coordInPathSoFar(newCoord)) {
                 continue;
             }
 
-            Path? shortestPathFromHere = getShortestPathToEnd(maze, new Path {
-                coords = [.. pathSoFar.coords, newCoord],
+            possiblePaths.Add(new Path {
+                pathSoFar = pathSoFar,
+                newCoord = newCoord,
                 score = newScore,
-            } );
-
-            if (shortestPathFromHere?.score <= currentLowestScore) {
-                possiblePaths.Add(shortestPathFromHere);
-            }
+                currentDirection = newDirection
+            });
         }
 
-        if (possiblePaths.Count > 0) {
-            return possiblePaths.OrderBy(p => p.score).First();
-        }
-
-        return null;
+        return possiblePaths;
     }
 
     class Path {
-        public List<Coord> coords;
+        public Path? pathSoFar;
+        public Coord newCoord;
         public int score;
+        public Direction currentDirection;
+
+        public bool coordInPathSoFar(Coord coord) {
+            return pathSoFar == null ? false : pathSoFar.newCoord.Equals(coord) || pathSoFar.coordInPathSoFar(coord);
+        }
     }
 
     class Coord {
         public int x;
         public int y;
+
+        public bool Equals(Coord coord) {
+            return coord.x == x && coord.y == y;
+        }
     }
 
     class Direction { 
@@ -85,7 +131,7 @@ public class Day16
         public int y;
     }
 
-    Coord coordOf(List<List<char>> maze, char item) {
+    Coord coordOf(char item) {
         for (int y = 0; y < maze.Count; y++) {
             for (int x = 0; x < maze[y].Count; x++) {
                 if (maze[y][x] == item) {
@@ -100,7 +146,7 @@ public class Day16
         return null;
     }
 
-    bool isOutOfBounds(Coord coord, int sizeX, int sizeY) {
+    bool isOutOfBounds(Coord coord) {
         return coord.x < 0 || coord.x >= sizeX || coord.y < 0 || coord.y >= sizeY;
     }
 
