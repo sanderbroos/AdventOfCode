@@ -1,20 +1,24 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Sander\\Documents\\AdventOfCode\\AdventOfCode\\AdventOfCode.csproj": {}
+    "C:\\Users\\sande\\Documents\\AdventOfCode\\AdventOfCode\\AdventOfCode.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Sander\\Documents\\AdventOfCode\\AdventOfCode\\AdventOfCode.csproj": {
+    "C:\\Users\\sande\\Documents\\AdventOfCode\\AdventOfCode\\AdventOfCode.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Sander\\Documents\\AdventOfCode\\AdventOfCode\\AdventOfCode.csproj",
+        "projectUniqueName": "C:\\Users\\sande\\Documents\\AdventOfCode\\AdventOfCode\\AdventOfCode.csproj",
         "projectName": "AdventOfCode",
-        "projectPath": "C:\\Users\\Sander\\Documents\\AdventOfCode\\AdventOfCode\\AdventOfCode.csproj",
-        "packagesPath": "C:\\Users\\Sander\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Sander\\Documents\\AdventOfCode\\AdventOfCode\\obj\\",
+        "projectPath": "C:\\Users\\sande\\Documents\\AdventOfCode\\AdventOfCode\\AdventOfCode.csproj",
+        "packagesPath": "C:\\Users\\sande\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\sande\\Documents\\AdventOfCode\\AdventOfCode\\obj\\",
         "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
         "configFilePaths": [
-          "C:\\Users\\Sander\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\sande\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
