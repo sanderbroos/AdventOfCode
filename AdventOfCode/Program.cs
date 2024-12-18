@@ -22,4 +22,10 @@
 // Console.WriteLine("Day15-1 " + new AOC2024.Day15Part1().GetSolution());
 // Console.WriteLine("Day15-2 " + new AOC2024.Day15Part2().GetSolution());
 
-Console.WriteLine("Day16-1 " + new AOC2024.Day16().Part1());
+// Console.WriteLine("Day16-1 " + new AOC2024.Day16().Part1());
+
+// Console.WriteLine("Day17-1 " + new AOC2024.Day17().Part1());
+// Console.WriteLine("Day17-2 " + new AOC2024.Day17().Part2());
+
+// Console.WriteLine("Day18-1 " + new AOC2024.Day18().Part1());
+Console.WriteLine("Day18-2 " + new AOC2024.Day18().Part2());

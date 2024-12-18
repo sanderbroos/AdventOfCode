@@ -14,6 +14,7 @@ public class Day16
     Coord mazeEnd;
     int sizeX;
     int sizeY;
+    HashSet<(Coord, Direction)> seen = [];
 
     public int? Part1()
     {
@@ -22,6 +23,7 @@ public class Day16
         sizeX = maze.First().Count;
         sizeY = maze.Count;
         Coord reindeerStart = coordOf('S');
+        seen.Add((reindeerStart, Directions.First()));
 
         List<Path> pathsToTry = [new Path {
             newCoord = reindeerStart,
@@ -33,9 +35,10 @@ public class Day16
 
         while (pathsToTry.Count > 0) {
             Path pathToTry = pathsToTry.First();
+            pathsToTry.RemoveAt(0);
 
             i++;
-            if (i % 1000 == 0) {
+            if (i % 500000 == 0) {
                 Console.WriteLine(i.ToString() + " " + pathsToTry.Count.ToString());
             } 
 
@@ -44,11 +47,13 @@ public class Day16
                 continue;
             }
 
-            List<Path> newPaths = getBranchingPaths(maze, pathToTry);
-
-            pathsToTry.Remove(pathToTry);
+            IEnumerable<Path> newPaths = getBranchingPaths(maze, pathToTry);
 
             foreach (Path newPath in newPaths) {
+                if (seen.Any(s=>s.Item1.Equals(newPath.newCoord) && s.Item2 == newPath.currentDirection)) {
+                    continue;
+                }
+
                 if (newPath.newCoord.Equals(mazeEnd)) {
                     pathsToEnd.Add(newPath);
                     if (newPath.score < currentLowestScore) {
@@ -56,17 +61,20 @@ public class Day16
                     }
                 }
 
-                bool added = false;
-                for (int index = 0; index < pathsToTry.Count; index++) {
-                    if (pathsToTry[index].score >= newPath.score) {
-                        pathsToTry.Insert(index, newPath);
-                        added = true;
-                        break;
-                    }
-                }
-                if (!added) {
-                    pathsToTry.Add(newPath);
-                }
+                seen.Add((newPath.newCoord, newPath.currentDirection));
+                pathsToTry.Add(newPath);
+
+                // bool added = false;
+                // for (int index = 0; index < pathsToTry.Count; index++) {
+                //     if (pathsToTry[index].score >= newPath.score) {
+                //         pathsToTry.Insert(index, newPath);
+                //         added = true;
+                //         break;
+                //     }
+                // }
+                // if (!added) {
+                //     pathsToTry.Add(newPath);
+                // }
             }
         }
 
@@ -78,32 +86,26 @@ public class Day16
         
     }
 
-    List<Path> getBranchingPaths(List<List<char>> maze, Path pathSoFar) {
-        Coord lastCoord = pathSoFar.newCoord;
-
-        List<Path> possiblePaths = [];
-
+    IEnumerable<Path> getBranchingPaths(List<List<char>> maze, Path pathSoFar) {
         foreach (Direction newDirection in Directions) {
-            Coord newCoord = new() { x = lastCoord.x + newDirection.x, y = lastCoord.y + newDirection.y};
+            Coord newCoord = new() { x = pathSoFar.newCoord.x + newDirection.x, y = pathSoFar.newCoord.y + newDirection.y};
             bool turn = newDirection != pathSoFar.currentDirection;
             int newScore = pathSoFar.score + 1 + (turn ? 1000 : 0);
 
             if (newScore >= currentLowestScore
                 || isOutOfBounds(newCoord)
                 || maze[newCoord.y][newCoord.x] == '#'
-                || pathSoFar.coordInPathSoFar(newCoord)) {
+                || pathSoFar.CoordInPathSoFar(newCoord)) {
                 continue;
             }
 
-            possiblePaths.Add(new Path {
+            yield return new Path {
                 pathSoFar = pathSoFar,
                 newCoord = newCoord,
                 score = newScore,
                 currentDirection = newDirection
-            });
+            };
         }
-
-        return possiblePaths;
     }
 
     class Path {
@@ -112,8 +114,8 @@ public class Day16
         public int score;
         public Direction currentDirection;
 
-        public bool coordInPathSoFar(Coord coord) {
-            return pathSoFar == null ? false : pathSoFar.newCoord.Equals(coord) || pathSoFar.coordInPathSoFar(coord);
+        public bool CoordInPathSoFar(Coord coord) {
+            return pathSoFar == null ? false : pathSoFar.newCoord.Equals(coord) || pathSoFar.CoordInPathSoFar(coord);
         }
     }
 
