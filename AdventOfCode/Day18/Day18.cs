@@ -41,7 +41,7 @@ public class Day18
             if (Part1(i) == 0) {
                 return input[i-1].ToString();
             }
-            Console.WriteLine(i.ToString());// + " " + Part1(i).ToString());
+            Console.WriteLine(i.ToString());
         }
 
         return null;
@@ -59,23 +59,5 @@ public class Day18
             .ToList();
 
         return coords;
-        // bool[,] space = new bool[70, 70];
-
-        // for (int i = 0; i < upTo; i++) {
-        //     List<int> coord = coords[i];
-
-        //     space[coord[1], coord[0]] = true;
-        // }
-
-        // return space;
     }
-
-    // class Coord {
-    //     public int x;
-    //     public int y;
-
-    //     public bool Equals(Coord coord) {
-    //         return coord.x == x && coord.y == y;
-    //     }
-    // }
 }
