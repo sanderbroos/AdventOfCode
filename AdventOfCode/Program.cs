@@ -37,3 +37,4 @@
 // Console.WriteLine("Day18-2 " + new AOC2024.Day18().Part2());
 
 Console.WriteLine("Day19-1 " + new AOC2024.Day19().Part1());
+Console.WriteLine("Day19-2 " + new AOC2024.Day19().Part2());

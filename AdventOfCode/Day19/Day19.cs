@@ -2,36 +2,52 @@ namespace AOC2024;
 
 public class Day19
 {
-    public int Part1(int upTo = 1024)
+    Dictionary<string, long> AlreadyCalculatedDesignCounts = [];
+
+    public long Part1()
     {
         List<string> towels = GetTowels();
         List<string> designs = GetDesigns();
 
-        return designs.Count(design => isDesignPossible(design, towels));
+        return designs.Count(design => PossibleArrangementsCount(design, towels) > 0);
     }
 
-    public void Part2()
+    public long Part2()
     {
+        List<string> towels = GetTowels();
+        List<string> designs = GetDesigns();
 
+        return designs.Sum(design => PossibleArrangementsCount(design, towels));
     }
 
-    bool isDesignPossible(string design, List<string> towels)
+    long PossibleArrangementsCount(string design, List<string> towels)
     {
+        if (AlreadyCalculatedDesignCounts.ContainsKey(design))
+        {
+            return AlreadyCalculatedDesignCounts[design];
+        }
+
+        long count = 0;
+
         foreach (string towel in towels)
         {
             if (towel.Length > design.Length)
             {
                 continue;
             }
-
-            string subDesign = design[..towel.Length];
-            if (design == towel || (subDesign == towel && isDesignPossible(design[towel.Length..], towels)))
+            else if (design == towel)
             {
-                return true;
+                count++;
+            }
+            else if (design[..towel.Length] == towel)
+            {
+                count += PossibleArrangementsCount(design[towel.Length..], towels);
             }
         }
 
-        return false;
+        AlreadyCalculatedDesignCounts[design] = count;
+
+        return count;
     }
 
     private static List<string> GetTowels()
