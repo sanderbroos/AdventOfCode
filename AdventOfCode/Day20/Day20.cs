@@ -6,60 +6,62 @@ public class Day20
 
     public int Part1()
     {
-        List<List<char>> maze = GetInput();
+        List<List<char>> racetrack = GetInput();
 
-        // there is only one route from start to end
-        var pathWithoutCheat = PathWithoutCheat(maze);
+        var pathWithoutCheat = PathWithoutCheat(racetrack);
 
-        return numberOfCheatPaths(maze, 100, pathWithoutCheat);
+        return NumberOfCheatPaths(racetrack, pathWithoutCheat, 100, 2);
     }
 
-    public void Part2()
+    public int Part2()
     {
+        List<List<char>> racetrack = GetInput();
 
+        var pathWithoutCheat = PathWithoutCheat(racetrack);
+
+        return NumberOfCheatPaths(racetrack, pathWithoutCheat, 100, 20);
     }
 
-    List<(int x, int y)> PathWithoutCheat(List<List<char>> maze)
+    List<(int x, int y)> PathWithoutCheat(List<List<char>> racetrack)
     {
-        int sizeX = maze.First().Count;
-        int sizeY = maze.Count;
-        (int x, int y) = CoordOf(maze, 'S');
-        (int x, int y) endCoord = CoordOf(maze, 'E');
+        int sizeX = racetrack.First().Count;
+        int sizeY = racetrack.Count;
+        var endCoord = CoordOf(racetrack, 'E');
+        List<(int x, int y)> path = [CoordOf(racetrack, 'S')];
+        var pathHasNotEnded = true;
 
-        List<List<(int x, int y)>> paths = [[(x, y)]];
-        List<(int x, int y)> visited = [paths.First().First()];
-
-        while (paths.Count > 0)
+        while (pathHasNotEnded)
         {
-            List<(int x, int y)> path = paths.First();
-            paths.Remove(path);
-            var lastInPath = path.Last();
+            var (lastX, lastY) = path.Last();
+            pathHasNotEnded = false;
 
             foreach ((int dirX, int dirY) in Directions)
             {
-                (int x, int y) newCoord = (lastInPath.x + dirX, lastInPath.y + dirY);
+                (int x, int y) newCoord = (lastX + dirX, lastY + dirY);
 
                 if (IsOutOfBounds(newCoord.x, newCoord.y, sizeX, sizeY)
-                    || (maze[newCoord.y][newCoord.x] == '#')
-                    || visited.Contains(newCoord))
+                    || (racetrack[newCoord.y][newCoord.x] == '#')
+                    || path.Contains(newCoord))
                 {
                     continue;
                 }
 
-                if (newCoord.x == endCoord.x && newCoord.y == endCoord.y)
+                path.Add(newCoord);
+                pathHasNotEnded = true;
+
+                if (newCoord == endCoord)
                 {
-                    return path.Union([newCoord]).ToList();
+                    return path;
                 }
 
-                visited.Add(newCoord);
-                paths.Add(path.Union([newCoord]).ToList());
+                break;
             }
         }
 
         return [];
     }
 
-    int numberOfCheatPaths(List<List<char>> maze, int minimumSaved, List<(int x, int y)> path)
+    int NumberOfCheatPaths(List<List<char>> maze, List<(int x, int y)> path, int minimumSaved, int maxCheatLength)
     {
         int sizeX = maze.First().Count;
         int sizeY = maze.Count;
@@ -70,23 +72,23 @@ public class Day20
         {
             int moveIndex = path.IndexOf(move);
 
-            foreach ((int cheat1dirX, int cheat1dirY) in Directions)
+            for (int newX = move.x - maxCheatLength; newX <= move.x + maxCheatLength; newX++)
             {
-                (int x, int y) cheat1 = (move.x + cheat1dirX, move.y + cheat1dirY);
-
-                if (!IsOutOfBounds(cheat1.x, cheat1.y, sizeX, sizeY) && maze[cheat1.y][cheat1.x] == '#')
+                for (int newY = move.y - maxCheatLength; newY <= move.y + maxCheatLength; newY++)
                 {
-                    foreach ((int cheat2dirX, int cheat2dirY) in Directions)
+                    int cheatLength = Math.Abs(newX - move.x) + Math.Abs(newY - move.y);
+                    if (IsOutOfBounds(newX, newY, sizeX, sizeY)
+                        || cheatLength > maxCheatLength
+                        || maze[newY][newX] == '#')
                     {
-                        (int x, int y) cheat2 = (cheat1.x + cheat2dirX, cheat1.y + cheat2dirY);
-                        if (!IsOutOfBounds(cheat2.x, cheat2.y, sizeX, sizeY) && maze[cheat2.y][cheat2.x] != '#')
-                        {
-                            int newIndex = path.IndexOf(cheat2);
-                            if (newIndex - moveIndex > minimumSaved + 1)
-                            {
-                                cheatCount++;
-                            }
-                        }
+                        continue;
+                    }
+
+                    (int x, int y) newCoord = (newX, newY);
+                    int newIndex = path.IndexOf(newCoord);
+                    if (newIndex - moveIndex >= minimumSaved + cheatLength)
+                    {
+                        cheatCount++;
                     }
                 }
             }
