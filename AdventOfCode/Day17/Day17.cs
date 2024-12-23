@@ -10,12 +10,13 @@ public class Day17
     long RegisterC = 0;
     int InstructionPointer = 0;
     // List<int> Program = [2,4,1,6,7,5,4,4,1,7,0,3,5,5,3,0];
-    List<int> Program = [0,3,5,4,3,0];
+    List<int> Program = [0, 3, 5, 4, 3, 0];
     string Output = "";
 
     public string Part1()
     {
-        while (InstructionPointer < Program.Count) {
+        while (InstructionPointer < Program.Count)
+        {
             Step();
         }
 
@@ -25,29 +26,28 @@ public class Day17
     public long Part2()
     {
         string desiredOutput = string.Join(",", Program) + ",";
-        int programLength = Program.Count;
-        int indexOfOut = Program.IndexOf(5);
 
-        for (long i = (long)Math.Pow(8, 15); i < Math.Pow(8, 16); i++ ) {
+        for (long i = (long)Math.Pow(8, 15); i < Math.Pow(8, 16); i++)
+        {
             RegisterA = i;
             InstructionPointer = 0;
             Output = "";
 
             bool valid = true;
-            while (InstructionPointer < Program.Count) {
-                if (!desiredOutput.StartsWith(Output)) {
+            while (InstructionPointer < Program.Count)
+            {
+                if (!desiredOutput.StartsWith(Output))
+                {
                     valid = false;
                     break;
                 }
-                // else if (Output.Length >= 20) {
-                //     Console.WriteLine(Output.Length.ToString().PadRight(5) + "   " + i.ToString().PadRight(20) + "   " + Convert.ToString(i, 2).Replace("0"," ").PadLeft(50));
-                // }
 
                 Step();
             }
 
 
-            if (valid && Output == desiredOutput) {
+            if (valid && Output == desiredOutput)
+            {
                 return i;
             }
         }
@@ -55,11 +55,13 @@ public class Day17
         return 0;
     }
 
-    private void Step() {
+    private void Step()
+    {
         int opcode = Program[InstructionPointer];
-        int operand = Program[InstructionPointer+1];
+        int operand = Program[InstructionPointer + 1];
 
-        switch (opcode) {
+        switch (opcode)
+        {
             case 0:
                 adv(operand);
                 break;
@@ -76,9 +78,6 @@ public class Day17
                 bxc();
                 break;
             case 5:
-                // if (Output.Length > 0) {
-                //     Output += ",";
-                // }
                 Output += outOperation(operand) + ",";
                 break;
             case 6:
@@ -89,14 +88,14 @@ public class Day17
                 break;
         }
 
-        InstructionPointer += 2;    
+        InstructionPointer += 2;
     }
 
     private void adv(int operand)
     {
         long comboOperand = ComboOperand(operand);
 
-        RegisterA = (long) (RegisterA / Math.Pow(2, comboOperand));
+        RegisterA = (long)(RegisterA / Math.Pow(2, comboOperand));
     }
 
     private void bxl(int operand)
@@ -113,7 +112,8 @@ public class Day17
 
     private void jnz(int operand)
     {
-        if (RegisterA == 0) {
+        if (RegisterA == 0)
+        {
             return;
         }
 
@@ -134,18 +134,20 @@ public class Day17
     {
         long comboOperand = ComboOperand(operand);
 
-        RegisterB = (long) (RegisterA / Math.Pow(2, comboOperand));
+        RegisterB = (long)(RegisterA / Math.Pow(2, comboOperand));
     }
 
     private void cdv(int operand)
     {
         long comboOperand = ComboOperand(operand);
 
-        RegisterC = (long) (RegisterA / Math.Pow(2, comboOperand));
+        RegisterC = (long)(RegisterA / Math.Pow(2, comboOperand));
     }
 
-    private long ComboOperand(int operand) {
-        switch (operand) {
+    private long ComboOperand(int operand)
+    {
+        switch (operand)
+        {
             case 4:
                 return RegisterA;
             case 5:
