@@ -76,7 +76,8 @@ public class Day21
             char verticalChar = offsetY > 0 ? 'v' : '^';
 
             // idk why it is better
-            // but it is
+            // it was a lucky guess
+            // don't touch it!!
             if ((buttons[currentY + offsetY, currentX] != null && (offsetX > 0)) || buttons[currentY, currentX + offsetX] == null)
             {
                 buttonSequence += new string(verticalChar, Math.Abs(offsetY))
