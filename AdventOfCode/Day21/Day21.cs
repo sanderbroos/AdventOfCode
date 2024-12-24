@@ -14,11 +14,11 @@ public class Day21
 
         foreach (string code in codes)
         {
-            List<string> sequencesRobot1 = getButtonSequences(code, NumericKeys);
-            List<string> sequencesRobot2 = sequencesRobot1.SelectMany(s => getButtonSequences(s, DirectionalKeys)).ToList();
-            List<string> sequencesRobot3 = sequencesRobot2.SelectMany(s => getButtonSequences(s, DirectionalKeys)).ToList();
+            string sequenceRobot1 = getButtonSequence(code, NumericKeys);
+            string sequenceRobot2 = getButtonSequence(sequenceRobot1, DirectionalKeys);
+            string sequenceRobot3 = getButtonSequence(sequenceRobot2, DirectionalKeys);
 
-            complexities.Add(sequencesRobot3.OrderBy(s => s.Length).First().Length * int.Parse(Regex.Match(code, @"\d+").Value));
+            complexities.Add(sequenceRobot3.Length * int.Parse(Regex.Match(code, @"\d+").Value));
         }
 
         return complexities.Sum();
@@ -26,12 +26,28 @@ public class Day21
 
     public int Part2()
     {
-        return 0;
+        string[] codes = GetInput();
+        List<int> complexities = [];
+
+        foreach (string code in codes)
+        {
+            string robotSequence = getButtonSequence(code, NumericKeys);
+
+            for (int i = 0; i < 25; i++)
+            {
+                Console.WriteLine(i.ToString() + " " + robotSequence.Length);
+                robotSequence = getButtonSequence(robotSequence, DirectionalKeys);
+            }
+
+            complexities.Add(robotSequence.Length * int.Parse(Regex.Match(code, @"\d+").Value));
+        }
+
+        return complexities.Sum();
     }
 
-    List<string> getButtonSequences(string buttonsToPress, char?[,] buttons)
+    string getButtonSequence(string buttonsToPress, char?[,] buttons)
     {
-        List<string> buttonSequences = [""];
+        string buttonSequence = "";
         (int currentX, int currentY) = CoordOf(buttons, 'A');
 
         foreach (char button in buttonsToPress)
@@ -42,28 +58,23 @@ public class Day21
             char horizontalChar = offsetX > 0 ? '>' : '<';
             char verticalChar = offsetY > 0 ? 'v' : '^';
 
-            List<string> newButtonSequences = [];
-            if (buttons[currentY + offsetY, currentX] != null)
+            if ((buttons[currentY + offsetY, currentX] != null && (offsetX > 0 || offsetY > 0)) || buttons[currentY, currentX + offsetX] == null)
             {
-                newButtonSequences.AddRange(buttonSequences.Select(bs => bs
-                    + new string(verticalChar, Math.Abs(offsetY))
+                buttonSequence += new string(verticalChar, Math.Abs(offsetY))
                     + new string(horizontalChar, Math.Abs(offsetX))
-                    + 'A'));
+                    + 'A';
             }
-            if (buttons[currentY, currentX + offsetX] != null)
+            else
             {
-                newButtonSequences.AddRange(buttonSequences.Select(bs => bs
-                    + new string(horizontalChar, Math.Abs(offsetX))
+                buttonSequence += new string(horizontalChar, Math.Abs(offsetX))
                     + new string(verticalChar, Math.Abs(offsetY))
-                    + 'A'));
+                    + 'A';
             }
-
-            buttonSequences = newButtonSequences.Distinct().ToList();
 
             (currentX, currentY) = (buttonX, buttonY);
         }
 
-        return buttonSequences;
+        return buttonSequence;
     }
 
     (int x, int y) CoordOf(char?[,] keys, char button)
