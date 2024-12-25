@@ -1,12 +1,10 @@
-using System.Diagnostics;
-
 namespace AOC2024;
 
 public class Day24
 {
     public long Part1()
     {
-        var wires = GetWires();
+        var wires = GetWireDict();
         var gates = GetGates();
 
         while (gates.Count > 0)
@@ -29,7 +27,7 @@ public class Day24
 
         var binaryNumber = string.Join("", wires.Where(w => w.Key.StartsWith('z'))
             .OrderByDescending(w => w.Key)
-            .Select(w => (w.Value ? 1 : 0).ToString()));
+            .Select(w => w.Value ? 1 : 0));
 
         return Convert.ToInt64(binaryNumber, 2);
     }
@@ -39,7 +37,28 @@ public class Day24
         return 0;
     }
 
-    private static Dictionary<string, bool> GetWires()
+    // private static List<Wire> GetWires()
+    // {
+    //     var gates = File.ReadAllLines("..\\..\\..\\..\\AdventOfCode\\Day24\\inputGates.txt")
+    //         .Select(line => line.Replace(" ->", "").Split(" "));
+
+    //     Dictionary<string, Wire> wires = [];
+    //     foreach (var gate in gates)
+    //     {
+    //         if (!wires.ContainsKey(gate[3]))
+    //         {
+    //             wires[gate[3]] = new Wire
+    //             {
+    //                 name = gate[3],
+
+    //             }
+    //         }
+    //     }
+
+    //     return gates;
+    // }
+
+    private static Dictionary<string, bool> GetWireDict()
     {
         var initialWires = File.ReadAllLines("..\\..\\..\\..\\AdventOfCode\\Day24\\inputWires.txt")
             .Select(line => line.Split(": "))
@@ -55,5 +74,14 @@ public class Day24
             .ToList();
 
         return gates;
+    }
+
+    public class Wire
+    {
+        public string name;
+        public bool? value = null;
+        public string operation;
+        public List<Wire> input;
+        public List<Wire> output = [];
     }
 }
