@@ -35,9 +35,38 @@ public class Day23
         return interconnectedComputers.Count;
     }
 
-    public int Part2()
+    public string Part2()
     {
-        return 0;
+        var computers = GetInput().Values.ToList();
+        HashSet<HashSet<Computer>> connectedGroups = [];
+
+        foreach (Computer computer in computers)
+        {
+            foreach (Computer connection in computer.connections)
+            {
+                HashSet<Computer> initialGroup = [computer, connection];
+                if (!connectedGroups.Any(hs => hs.SetEquals(initialGroup)))
+                {
+                    connectedGroups.Add(initialGroup);
+                }
+            }
+
+            HashSet<HashSet<Computer>> newGroups = [];
+            foreach (HashSet<Computer> group in connectedGroups)
+            {
+                if (group.All(c => c.connections.Contains(computer)))
+                {
+                    HashSet<Computer> newGroup = [.. group.Union([computer])];
+                    if (!connectedGroups.Any(hs => hs.SetEquals(newGroup)))
+                    {
+                        newGroups.Add(newGroup);
+                    }
+                }
+            }
+            connectedGroups.UnionWith(newGroups);
+        }
+
+        return string.Join(',', connectedGroups.MaxBy(cg => cg.Count()).OrderBy(c => c.name).Select(c => c.name));
     }
 
     private static Dictionary<string, Computer> GetInput()
