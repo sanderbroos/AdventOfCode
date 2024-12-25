@@ -10,6 +10,9 @@
 // Console.WriteLine("Day04-1 " + new AOC2024.Day04().Part1());
 // Console.WriteLine("Day04-2 " + new AOC2024.Day04().Part2());
 
+Console.WriteLine("Day05-1 " + new AOC2024.Day05().Part1());
+Console.WriteLine("Day05-2 " + new AOC2024.Day05().Part2());
+
 // Console.WriteLine("Day10-1 " + new AOC2024.Day10().Part1());
 // Console.WriteLine("Day10-2 " + new AOC2024.Day10().Part2());
 
@@ -54,5 +57,5 @@
 // Console.WriteLine("Day24-1 " + new AOC2024.Day24().Part1());
 // Console.WriteLine("Day24-2 " + new AOC2024.Day24().Part2());
 
-Console.WriteLine("Day25-1 " + new AOC2024.Day25().Part1());
-Console.WriteLine("Day25-2 " + new AOC2024.Day25().Part2());
+// Console.WriteLine("Day25-1 " + new AOC2024.Day25().Part1());
+// Console.WriteLine("Day25-2 " + new AOC2024.Day25().Part2());
