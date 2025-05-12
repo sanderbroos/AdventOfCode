@@ -2,52 +2,57 @@ namespace AOC2024;
 
 public class Day19
 {
-    Dictionary<string, long> AlreadyCalculatedDesignCounts = [];
-
-    public long Part1()
+    public static long Part1()
     {
         List<string> towels = GetTowels();
         List<string> designs = GetDesigns();
+        var towelCalculator = new TowelArrangementCalculator(towels);
 
-        return designs.Count(design => PossibleArrangementsCount(design, towels) > 0);
+        return designs.Count(design => towelCalculator.GetTotalNumberOfArrangements(design) > 0);
     }
 
-    public long Part2()
+    public static long Part2()
     {
         List<string> towels = GetTowels();
         List<string> designs = GetDesigns();
+        var towelCalculator = new TowelArrangementCalculator(towels);
 
-        return designs.Sum(design => PossibleArrangementsCount(design, towels));
+        return designs.Sum(towelCalculator.GetTotalNumberOfArrangements);
     }
 
-    long PossibleArrangementsCount(string design, List<string> towels)
+    private class TowelArrangementCalculator(List<string> towels)
     {
-        if (AlreadyCalculatedDesignCounts.ContainsKey(design))
+        private readonly List<string> _towels = towels;
+        private readonly Dictionary<string, long> _cachedArrangementCounts = [];
+
+        public long GetTotalNumberOfArrangements(string design)
         {
-            return AlreadyCalculatedDesignCounts[design];
+            if (!_cachedArrangementCounts.TryGetValue(design, out long cachedCount))
+            {
+                cachedCount = _towels.Sum(towel => CalcNumberOfArrangementsStartingWithTowel(design, towel));
+                _cachedArrangementCounts[design] = cachedCount;
+            }
+
+            return cachedCount;
         }
 
-        long count = 0;
-
-        foreach (string towel in towels)
+        private long CalcNumberOfArrangementsStartingWithTowel(string design, string towel)
         {
             if (towel.Length > design.Length)
             {
-                continue;
+                return 0;
             }
             else if (design == towel)
             {
-                count++;
+                return 1;
             }
             else if (design[..towel.Length] == towel)
             {
-                count += PossibleArrangementsCount(design[towel.Length..], towels);
+                return GetTotalNumberOfArrangements(design[towel.Length..]);
             }
+
+            return 0;
         }
-
-        AlreadyCalculatedDesignCounts[design] = count;
-
-        return count;
     }
 
     private static List<string> GetTowels()
