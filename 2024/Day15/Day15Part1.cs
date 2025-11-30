@@ -121,6 +121,6 @@ public class Day15Part1
                 return new Move { x = 0, y = 1 };
         }
 
-        return null;
+        return new Move { x = -1, y = 1 };
     }
 }

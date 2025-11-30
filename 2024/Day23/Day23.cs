@@ -4,7 +4,7 @@ namespace AOC2024;
 
 public class Day23
 {
-    public int Part1()
+    public static int Part1()
     {
         var computers = GetInput().Values;
         HashSet<HashSet<Computer>> interconnectedComputers = [];
@@ -66,7 +66,7 @@ public class Day23
             connectedGroups.UnionWith(newGroups);
         }
 
-        return string.Join(',', connectedGroups.MaxBy(cg => cg.Count()).OrderBy(c => c.name).Select(c => c.name));
+        return string.Join(',', connectedGroups.MaxBy(cg => cg.Count)!.OrderBy(c => c.name).Select(c => c.name));
     }
 
     private static Dictionary<string, Computer> GetInput()

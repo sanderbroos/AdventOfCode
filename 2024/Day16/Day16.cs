@@ -10,8 +10,8 @@ public class Day16
     ];
 
     int currentLowestScore = int.MaxValue;
-    List<List<char>> maze;
-    Coord mazeEnd;
+    public required List<List<char>> maze;
+    public required Coord mazeEnd;
     int sizeX;
     int sizeY;
     HashSet<(Coord, Direction)> seen = [];
@@ -19,10 +19,10 @@ public class Day16
     public int? Part1()
     {
         maze = GetInput();
-        mazeEnd = coordOf('E');
+        mazeEnd = CoordOf('E');
         sizeX = maze.First().Count;
         sizeY = maze.Count;
-        Coord reindeerStart = coordOf('S');
+        Coord reindeerStart = CoordOf('S');
         seen.Add((reindeerStart, Directions.First()));
 
         List<Path> pathsToTry = [new Path {
@@ -122,9 +122,9 @@ public class Day16
     class Path
     {
         public Path? pathSoFar;
-        public Coord newCoord;
+        public required Coord newCoord;
         public int score;
-        public Direction currentDirection;
+        public required Direction currentDirection;
 
         public bool CoordInPathSoFar(Coord coord)
         {
@@ -132,7 +132,7 @@ public class Day16
         }
     }
 
-    class Coord
+    public class Coord
     {
         public int x;
         public int y;
@@ -149,7 +149,7 @@ public class Day16
         public int y;
     }
 
-    Coord coordOf(char item)
+    Coord CoordOf(char item)
     {
         for (int y = 0; y < maze.Count; y++)
         {
@@ -166,7 +166,11 @@ public class Day16
             }
         }
 
-        return null;
+        return new Coord
+        {
+            x = -1,
+            y = -1
+        };
     }
 
     bool isOutOfBounds(Coord coord)

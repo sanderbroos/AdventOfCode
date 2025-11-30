@@ -57,7 +57,7 @@ public class Day19
 
     private static List<string> GetTowels()
     {
-        var towels = File.ReadAllLines("..\\..\\..\\..\\AdventOfCode\\2024\\Day19\\inputTowels.txt")[0]
+        var towels = File.ReadAllLines("2024/Day19/inputTowels.txt")[0]
             .Split(", ")
             .ToList();
 
@@ -66,7 +66,7 @@ public class Day19
 
     private static List<string> GetDesigns()
     {
-        var towels = File.ReadAllLines("..\\..\\..\\..\\AdventOfCode\\2024\\Day19\\inputDesigns.txt")
+        var towels = File.ReadAllLines("2024/Day19/inputDesigns.txt")
             .ToList();
 
         return towels;

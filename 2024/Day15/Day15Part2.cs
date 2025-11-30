@@ -15,7 +15,7 @@ public class Day15Part2
         return SumOfBoxGPS(map);
     }
 
-    private (int, int) CoordinatesOf(List<List<char?>> map, char? item)
+    private static (int, int) CoordinatesOf(List<List<char?>> map, char? item)
     {
         for (int y = 0; y < map.Count; y++)
         {
@@ -65,7 +65,8 @@ public class Day15Part2
 
     private bool TryMoveBox(List<List<char?>> map, int x, int y, Move move, bool moveBox = true)
     {
-        if (map[y][x] == ']') { x -= 1; };
+        if (map[y][x] == ']') { x -= 1; }
+        ;
 
         int newX = x + move.x;
         int newY = y + move.y;
@@ -178,6 +179,6 @@ public class Day15Part2
                 return new Move { x = 0, y = 1 };
         }
 
-        return null;
+        return new Move { x = -1, y = -1 };
     }
 }
