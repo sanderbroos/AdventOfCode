@@ -26,18 +26,14 @@ public class Day03
 
         foreach (var bank in banks)
         {
-            var highest = bank[..^11].Max();
-            var outputJoltage = $"{highest}";
-            var lastIndex = bank.IndexOf(highest);
+            var outputJoltage = "";
+            var start = 0;
 
-            for (int i = 1; i < 12; i++)
+            for (int end = bank.Count - 11; end <= bank.Count; end++)
             {
-                var upToIndex = bank.Count - 12 + i;
-
-                var startingIndex = lastIndex + 1 > upToIndex ? upToIndex : lastIndex + 1;
-                var highestFollowingLast = bank[startingIndex..(upToIndex + 1)].Max();
-                outputJoltage += highestFollowingLast;
-                lastIndex = bank.IndexOf(highestFollowingLast, startingIndex);
+                var highest = bank[start..end].Max();
+                outputJoltage += highest;
+                start = bank.IndexOf(highest, start) + 1;
             }
 
             totalOutputJoltage += long.Parse(outputJoltage);
