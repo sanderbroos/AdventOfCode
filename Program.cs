@@ -85,7 +85,10 @@
         // Console.WriteLine("2025-Day03-1 " + AOC2025.Day03.Part1());
         // Console.WriteLine("2025-Day03-2 " + AOC2025.Day03.Part2());
 
-        Console.WriteLine("2025-Day04-1 " + AOC2025.Day04.Part1());
-        Console.WriteLine("2025-Day04-2 " + AOC2025.Day04.Part2());
+        // Console.WriteLine("2025-Day04-1 " + AOC2025.Day04.Part1());
+        // Console.WriteLine("2025-Day04-2 " + AOC2025.Day04.Part2());
+
+        Console.WriteLine("2025-Day05-1 " + AOC2025.Day05.Part1());
+        Console.WriteLine("2025-Day05-2 " + AOC2025.Day05.Part2());
     }
 }
