@@ -64,8 +64,6 @@ public class Day05
             }
         }
 
-        var temp = ranges.OrderBy(i => i[0]);
-
         return ranges.Sum(r => r[1] - r[0] + 1);
     }
 
