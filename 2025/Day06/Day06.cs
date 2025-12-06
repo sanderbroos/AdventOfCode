@@ -30,7 +30,31 @@ public class Day06
 
     public static long Part2()
     {
-        return 0;
+        var problems = File.ReadAllLines("/Users/sanderbroos/Documents/Source/AdventOfCode/2025/Day06/input.txt");
+        long grandTotal = 0;
+        long currentResult = 0;
+        var currentOperator = ' ';
+
+        for (var i = 0; i < problems.Max(l => l.Length); i++)
+        {
+            if (problems[^1][i] != ' ')
+            {
+                grandTotal += currentResult;
+                currentOperator = problems[^1][i];
+                currentResult = currentOperator == '+' ? 0 : 1;
+            }
+
+            if (problems[..^1].Any(line => line[i] != ' '))
+            {
+                var number = int.Parse(new string([.. problems[..^1].Select(row => row[i])]));
+                if (currentOperator == '+') { currentResult += number; }
+                else if (currentOperator == '*') { currentResult *= number; }
+            }
+        }
+
+        grandTotal += currentResult;
+
+        return grandTotal;
     }
 
     private static List<string[]> GetProblems()
