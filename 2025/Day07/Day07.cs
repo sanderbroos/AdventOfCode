@@ -1,4 +1,5 @@
 using System.Reflection.Metadata;
+using Microsoft.VisualBasic;
 
 namespace AOC2025;
 
@@ -33,13 +34,39 @@ public class Day07
             }
         }
 
-
         return splitCount;
     }
 
     public static long Part2()
     {
-        return 0;
+        var tachyonManifold = GetTachyonManifold();
+        Dictionary<(int x, int y), long> cache = [];
+
+        return TimelineCountFromPoint(tachyonManifold, tachyonManifold[0].IndexOf('S'), 1, cache);
+    }
+
+    private static long TimelineCountFromPoint(char[][] manifold, int x, int y, Dictionary<(int x, int y), long> cache)
+    {
+        if (cache.TryGetValue((x, y), out long value))
+        {
+            return value;
+        }
+
+        long timelineCount = 1;
+
+        if (y >= manifold.Length - 1) return timelineCount;
+
+        if (manifold[y + 1][x] == splitter)
+        {
+            timelineCount *= TimelineCountFromPoint(manifold, x - 1, y + 1, cache) + TimelineCountFromPoint(manifold, x + 1, y + 1, cache);
+        }
+        else
+        {
+            timelineCount *= TimelineCountFromPoint(manifold, x, y + 1, cache);
+        }
+
+        cache[(x, y)] = timelineCount;
+        return timelineCount;
     }
 
     private static char[][] GetTachyonManifold()
