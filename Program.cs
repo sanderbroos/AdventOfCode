@@ -94,7 +94,7 @@
         // Console.WriteLine("2025-Day06-1 " + AOC2025.Day06.Part1());
         // Console.WriteLine("2025-Day06-2 " + AOC2025.Day06.Part2());
 
-        Console.WriteLine("2025-Day07-1 " + AOC2025.Day07.Part1());
-        Console.WriteLine("2025-Day07-2 " + AOC2025.Day07.Part2());
+        Console.WriteLine("2025-Day08-1 " + AOC2025.Day08.Part1());
+        Console.WriteLine("2025-Day08-2 " + AOC2025.Day08.Part2());
     }
 }

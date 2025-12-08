@@ -54,7 +54,10 @@ public class Day07
 
         long timelineCount = 1;
 
-        if (y >= manifold.Length - 1) return timelineCount;
+        if (y >= manifold.Length - 1)
+        {
+            return timelineCount;
+        }
 
         if (manifold[y + 1][x] == splitter)
         {
