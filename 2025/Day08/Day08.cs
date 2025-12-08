@@ -47,6 +47,49 @@ public class Day08
 
     public static long Part2()
     {
+        var junctionBoxes = GetJunctionBoxes();
+        var orderedBoxes = CalculateDistances(junctionBoxes).OrderBy(kv => kv.Value).Select(kv => kv.Key).ToList();
+        List<HashSet<int[]>> circuits = [];
+
+        for (var i = 0; i < orderedBoxes.Count; i++)
+        {
+            var box1 = orderedBoxes[i][0];
+            var box2 = orderedBoxes[i][1];
+
+            var circuitWithBox1 = circuits.FirstOrDefault(circuit => circuit.Contains(box1));
+            var circuitWithBox2 = circuits.FirstOrDefault(circuit => circuit.Contains(box2));
+
+            if (circuitWithBox1 is not null)
+            {
+                if (circuitWithBox2 is not null)
+                {
+                    if (circuitWithBox1 == circuitWithBox2)
+                    {
+                        continue;
+                    }
+                    circuitWithBox1.UnionWith(circuitWithBox2);
+                    circuits.Remove(circuitWithBox2);
+                }
+                else
+                {
+                    circuitWithBox1.Add(box2);
+                }
+            }
+            else if (circuitWithBox2 is not null)
+            {
+                circuitWithBox2.Add(box1);
+            }
+            else
+            {
+                circuits.Add([box1, box2]);
+            }
+
+            if (circuits[0].Count == junctionBoxes.Count)
+            {
+                return box1[0] * box2[0];
+            }
+        }
+
         return 0;
     }
 
