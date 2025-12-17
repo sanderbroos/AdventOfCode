@@ -11,7 +11,9 @@ public class Day11
 
     public static long Part2()
     {
-        return 0;
+        var devices = GetInput();
+
+        return NumberOfPathsPassingDacFft(devices.Single(d => d.name == "svr"), []);
     }
 
     private static long NumberOfPathsOut(Device device)
@@ -24,6 +26,28 @@ public class Day11
         {
             count += NumberOfPathsOut(outputDevice);
         }
+
+        return count;
+    }
+
+    private static long NumberOfPathsPassingDacFft(Device device, Dictionary<(Device, bool, bool), long> cache, bool passedDac = false, bool passedFft = false)
+    {
+        if (device.name == "out" && passedDac && passedFft) return 1;
+
+        var key = (device, passedDac, passedFft);
+        if (cache.TryGetValue(key, out var cachedValue)) return cachedValue;
+
+        if (device.name == "dac") passedDac = true;
+        if (device.name == "fft") passedFft = true;
+
+        long count = 0;
+
+        foreach (var outputDevice in device.outputDevices)
+        {
+            count += NumberOfPathsPassingDacFft(outputDevice, cache, passedDac, passedFft);
+        }
+
+        cache[key] = count;
 
         return count;
     }
@@ -60,7 +84,7 @@ public class Day11
 
     public class Device
     {
-        public string name;
+        public string name = "";
         public List<Device> outputDevices = [];
     }
 }
